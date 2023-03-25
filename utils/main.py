@@ -74,7 +74,7 @@ class Connector:
         функция удаления не сработает
         """
         if not query:
-            raise ValueError("Query must not be empty")
+            raise ValueError("Запрос не должен быть пустым")
         with open(self.data_file, 'r+') as f:
             file_data = json.load(f)
             f.seek(0)
