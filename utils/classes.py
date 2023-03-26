@@ -1,5 +1,6 @@
-from utils import Engine
+from utils import Engine, HH, Superjob
 import json
+
 class Vacancy:
     __slots__ = ('job_title', 'job_link', 'job_description', 'job_salary')
 
@@ -16,20 +17,20 @@ class Vacancy:
 class File:
     def combine(self):
         '''Создание общего файла с вакансиями'''
+        hh = HH()
+        hh.get_request()
+        sj = Superjob()
+        sj.get_request()
         Engine.get_connector('All_jobs.json')
         with open('vacanciesHH.json', 'r') as f1, open('vacanciesSJ.json', 'r') as f2, open('All_jobs.json', 'w') as outfile:
-            # read in the JSON files as strings
             data1_str = f1.read()
             data2_str = f2.read()
 
-            # parse the JSON strings into Python objects
             data1 = json.loads(data1_str)
             data2 = json.loads(data2_str)
 
-            # combine the two lists of dictionaries
             combined_data = data1 + data2
 
-            # write the combined data to the output file with indentation
             json.dump(combined_data, outfile, indent=4)
 
 json_combiner = File()

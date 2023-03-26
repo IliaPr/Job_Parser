@@ -57,11 +57,9 @@ class Superjob(Engine):
         with open('vacanciesSJ.json', 'w') as f:
             json.dump(jobs, f, indent=4)
 
-if __name__ == '__main__':
-    hh = HH()
-    hh.get_request()
-    sj = Superjob()
-    sj.get_request()
+#if __name__ == '__main__':
+    #sj = Superjob()
+    #sj.get_request()
 
 
 
