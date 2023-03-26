@@ -18,6 +18,7 @@ class Engine(ABC):
         return connector
 class HH(Engine):
     def get_request(self):
+        Engine.get_connector('vacanciesHH.json')
         jobs = []
         for i in range(50):
             url = "https://api.hh.ru/vacancies"
@@ -36,6 +37,7 @@ class HH(Engine):
 
 class Superjob(Engine):
     def get_request(self):
+        Engine.get_connector('vacanciesSJ.json')
         jobs = []
         for i in range(6):
             url = 'https://api.superjob.ru/2.0/vacancies/'
@@ -55,12 +57,11 @@ class Superjob(Engine):
         with open('vacanciesSJ.json', 'w') as f:
             json.dump(jobs, f, indent=4)
 
-x = Engine.get_connector('vacanciesHH.json')
-hh = HH()
-hh.get_request()
-y = Engine.get_connector('vacanciesSJ.json')
-sj = Superjob()
-sj.get_request()
+if __name__ == '__main__':
+    hh = HH()
+    hh.get_request()
+    sj = Superjob()
+    sj.get_request()
 
 
 
