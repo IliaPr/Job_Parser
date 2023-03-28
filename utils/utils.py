@@ -3,6 +3,8 @@ import os
 
 import requests
 from abc import ABC, abstractmethod
+
+
 from main import Connector
 
 class Engine(ABC):
@@ -27,7 +29,29 @@ class HH(Engine):
             for a in range(20):
                 job = {}
                 job["Name"] = self.request['items'][a]['name']
-                job["Salary"] = self.request['items'][a]['salary']
+                if self.request['items'][a]['salary'] == None:
+                    job['Salary_from'] = 0
+                    job['Salary_to'] = 0
+                elif self.request['items'][a]['salary']['from'] == None:
+                    job['Salary_from'] = int(0)
+                    if self.request['items'][a]['salary']['currency'] == 'USD':
+                        job['Salary_to'] = (self.request['items'][a]['salary']['to'])*77
+                    else:
+                        job['Salary_to'] = self.request['items'][a]['salary']['to']
+                elif self.request['items'][a]['salary']['to'] == None:
+                    if self.request['items'][a]['salary']['currency'] == 'USD':
+                        job['Salary_from'] = (self.request['items'][a]['salary']['from'])*77
+                    else:
+                        job['Salary_from'] = self.request['items'][a]['salary']['from']
+                    job['Salary_to'] = int(0)
+                else:
+                    if self.request['items'][a]['salary']['currency'] == 'USD':
+                        job['Salary_from'] = (self.request['items'][a]['salary']['from'])*77
+                        job['Salary_to'] = (self.request['items'][a]['salary']['to'])*77
+                    else:
+                        job['Salary_from'] = self.request['items'][a]['salary']['from']
+                        job['Salary_to'] = self.request['items'][a]['salary']['to']
+                #job["Salary"] = self.request['items'][a]['salary']
                 job["Link"] = self.request['items'][a]['alternate_url']
                 job['Requirement'] = self.request['items'][a]['snippet']['requirement']
                 jobs.append(job)
@@ -57,9 +81,9 @@ class Superjob(Engine):
         with open('vacanciesSJ.json', 'w') as f:
             json.dump(jobs, f, indent=4)
 
-#if __name__ == '__main__':
-    #sj = Superjob()
-    #sj.get_request()
+if __name__ == '__main__':
+    hh = HH()
+    hh.get_request()
 
 
 
