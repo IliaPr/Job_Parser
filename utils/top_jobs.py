@@ -1,4 +1,4 @@
-from utils import Engine, HH, Superjob
+from engines import Engine, HH, Superjob
 import json
 
 class File:
@@ -22,43 +22,49 @@ class File:
 
 
 class Vacancy:
-    def __init__(self, title, salary_from, salary_to, description):
+    def __init__(self, title, salary_from, salary_to, description, link):
         self.title = title
         self.salary_from = salary_from
         self.salary_to = salary_to
         self.description = description
+        self.link = link
 
     def __str__(self):
-        return f"{self.title}: {self.salary_from} - {self.salary_to}"
+        return f"Название вакансии - {self.title}\nОписание: {self.description}\nЗарплата от: {self.salary_from}\nЗарплата до: {self.salary_to}\nСсылка на вакансию {self.link}"
 
 
 class JobVacancyList:
     '''Сортировка вакансий'''
-    def __init__(self, file_path):
-        with open(file_path, "r") as file:
+    def __init__(self):
+        f = File()
+        f.combine()
+        with open('All_jobs.json', "r") as file:
             data = json.load(file)
 
         self.vacancies = []
         for vacancy in data:
             title = vacancy["Name"]
-            salary_from = vacancy["Salary_from"]
-            salary_to = vacancy["Salary_to"]
+            if 'Salary' in vacancy:
+                salary_from = vacancy["Salary"]['from']
+                salary_to = vacancy["Salary"]['to']
+            else:
+                continue
             description = vacancy["Requirement"]
-            self.vacancies.append(Vacancy(title, salary_from, salary_to, description))
+            link = vacancy['Link']
+            self.vacancies.append(Vacancy(title, salary_from, salary_to, description, link))
 
     def sort_by_salary_increase(self):
-        self.vacancies = sorted(self.vacancies, key=lambda v: v.salary_from)
+        self.vacancies = sorted(self.vacancies, key=lambda v: v.salary_to)
 
     def top_vacancies_by_salary(self, n=5):
-        sorted_vacancies = sorted(self.vacancies, key=lambda v: v.salary_from, reverse=True)
+        sorted_vacancies = sorted(self.vacancies, key=lambda v: v.salary_to, reverse=True)
         top_vacancies = sorted_vacancies[:n]
         for vacancy in top_vacancies:
-            print(vacancy)
+            print(f'{vacancy}\n')
 
-f = File()
-f.combine()
 
-job_vacancies = JobVacancyList("All_jobs.json")
+
+job_vacancies = JobVacancyList()
 job_vacancies.sort_by_salary_increase()
 job_vacancies.top_vacancies_by_salary(n=10)
 
