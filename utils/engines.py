@@ -9,7 +9,7 @@ from connector import Connector
 
 class Engine(ABC):
     @abstractmethod
-    def get_request(self):
+    def get_request(self, search_keyword):
         pass
 
     @staticmethod
@@ -19,12 +19,12 @@ class Engine(ABC):
         connector.data_file = file_name
         return connector
 class HH(Engine):
-    def get_request(self):
+    def get_request(self, search_keyword):
         Engine.get_connector('vacanciesHH.json')
         jobs = []
         for i in range(50):
             url = "https://api.hh.ru/vacancies"
-            par = {'text': 'python', 'areas': 113, 'page': i}
+            par = {'text': search_keyword, 'areas': 113, 'page': i}
             self.request = requests.get(url, params=par).json()
             for a in range(20):
                 job = {}
@@ -41,9 +41,6 @@ class HH(Engine):
                     if self.request['items'][a]['salary']['currency'] == 'RUR':
                         job['Salary'] = {'from': self.request['items'][a]['salary']['from'],
                                          'to': self.request['items'][a]['salary']['to']}
-                # job = {'Salary': {'from':  self.request['items'][a]['salary']['from']}}
-                # job = {'Salary': {'to':  self.request['items'][a]['salary']['to']}}
-                #job["Salary"] = self.request['items'][a]['salary']
                 job["Link"] = self.request['items'][a]['alternate_url']
                 job['Requirement'] = self.request['items'][a]['snippet']['requirement']
                 jobs.append(job)
@@ -52,14 +49,14 @@ class HH(Engine):
                 json.dump(jobs, f, indent=4)
 
 class Superjob(Engine):
-    def get_request(self):
+    def get_request(self, search_keyword):
         Engine.get_connector('vacanciesSJ.json')
         jobs = []
         for i in range(6):
             url = 'https://api.superjob.ru/2.0/vacancies/'
             api_key: str = os.getenv('SJApi')
             headers = {"X-Api-App-Id": api_key}
-            par = {'keywords': 'python', 'page': i, 'count': 100}
+            par = {'keywords': search_keyword, 'page': i, 'count': 100}
             self.request = requests.get(url, headers=headers, params=par).json()
             for a in range(100):
                 job = {}
@@ -74,7 +71,7 @@ class Superjob(Engine):
 
 if __name__ == '__main__':
     hh = HH()
-    hh.get_request()
+    hh.get_request('Python')
 
 
 
