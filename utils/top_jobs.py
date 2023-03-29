@@ -1,13 +1,9 @@
-from engines import Engine, HH, Superjob
+from engines import Engine
 import json
 
 class File:
     def combine(self):
         '''Создание общего файла с вакансиями'''
-        #hh = HH()
-        #hh.get_request()
-        #sj = Superjob()
-        #sj.get_request()
         Engine.get_connector('All_jobs.json')
         with open('vacanciesHH.json', 'r') as f1, open('vacanciesSJ.json', 'r') as f2, open('All_jobs.json', 'w') as outfile:
             data1_str = f1.read()
@@ -22,6 +18,7 @@ class File:
 
 
 class Vacancy:
+    '''Задание строкового представления'''
     def __init__(self, title, salary_from, salary_to, description, link):
         self.title = title
         self.salary_from = salary_from
@@ -61,25 +58,3 @@ class JobVacancyList:
         top_vacancies = sorted_vacancies[:n]
         for vacancy in top_vacancies:
             print(f'{vacancy}\n')
-
-
-#f = File()
-#f.combine()
-
-#job_vacancies = JobVacancyList()
-#job_vacancies.sort_by_salary_increase()
-#job_vacancies.top_vacancies_by_salary(n=10)
-if __name__ == '__main__':
-    print('Привет! Введи ключевое слово для поиска вакансий')
-    keyword = input().lower()
-    print('Введите количество вакансий по убыванию заработной платы для вывода')
-    number_of_vacancies = int(input())
-    if number_of_vacancies <= 0:
-        print('Количество вакасий должно быть больше 0! Введите еще раз')
-        number_of_vacancies = int(input())
-    else:
-        f = File()
-        f.combine()
-        job_vacancies = JobVacancyList()
-        job_vacancies.sort_by_salary_increase()
-        job_vacancies.top_vacancies_by_salary(n=number_of_vacancies)

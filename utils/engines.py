@@ -20,6 +20,7 @@ class Engine(ABC):
         return connector
 class HH(Engine):
     def get_request(self, search_keyword):
+        '''Получение файла с вакансиями по ключевому слову из HH.ru'''
         Engine.get_connector('vacanciesHH.json')
         jobs = []
         for i in range(50):
@@ -50,6 +51,7 @@ class HH(Engine):
 
 class Superjob(Engine):
     def get_request(self, search_keyword):
+        '''Получение файла с вакансиями по ключевому слову из superjob.ru'''
         Engine.get_connector('vacanciesSJ.json')
         jobs = []
         for i in range(6):
