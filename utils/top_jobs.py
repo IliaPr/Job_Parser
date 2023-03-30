@@ -58,3 +58,11 @@ class JobVacancyList:
         top_vacancies = sorted_vacancies[:n]
         for vacancy in top_vacancies:
             print(f'{vacancy}\n')
+
+    def sort_by_user_input_salary(self, n, user_salary):
+        sorted_vacancies = sorted(self.vacancies, key=lambda v: v.salary_from)
+
+        matching_vacancies = [vacancy for vacancy in sorted_vacancies if vacancy.salary_from >= user_salary]
+        truncated_vacancies = matching_vacancies[:n]
+        for vacancy in truncated_vacancies:
+            print(f'{vacancy}\n')

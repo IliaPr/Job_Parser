@@ -65,15 +65,17 @@ class Superjob(Engine):
                 job["Name"] = self.request['objects'][a]['profession']
                 job['Salary'] = {'from': self.request['objects'][a]['payment_from'], 'to': self.request['objects'][a]['payment_to']}
                 job["Link"] = self.request['objects'][a]['link']
-                job['Requirement'] = self.request['objects'][a]['candidat']
+                job['Requirement'] = self.request['objects'][a]['candidat'][0:120]+'...'
                 jobs.append(job)
 
         with open('vacanciesSJ.json', 'w') as f:
             json.dump(jobs, f, indent=4)
 
 if __name__ == '__main__':
-    hh = HH()
-    hh.get_request('Python')
+    #hh = HH()
+    #hh.get_request('python')
+    sj = Superjob()
+    sj.get_request('python')
 
 
 
